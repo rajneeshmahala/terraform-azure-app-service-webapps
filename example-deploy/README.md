@@ -4,9 +4,9 @@ This directory contains a complete, runnable example for deploying an Azure Linu
 
 ## Resources Created
 When applied, this example provisions:
-1. **Resource Group**: `rg-webapp-example-deploy` (located in `East US`).
-2. **App Service Plan**: `asp-webapp-example-deploy` (B1 Basic plan, Linux).
-3. **App Service (Linux Web App)**: Named using the naming convention of the module (e.g. `app-ot-dev-test-eastus-examplewebapp-<suffix>`).
+1. **Resource Group**: `rg-webapp-example-deploy` (located in `Central India`).
+2. **App Service Plan**: `asp-webapp-example-deploy` (F1 Free plan, Linux).
+3. **App Service (Linux Web App)**: Named using the naming convention of the module (e.g. `app-ot-dev-test-centralindia-examplewebapp-<suffix>`) with `always_on` disabled.
 
 ---
 
