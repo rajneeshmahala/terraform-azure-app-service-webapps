@@ -14,7 +14,7 @@ resource "azurerm_service_plan" "example" {
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
   os_type             = "Linux"
-  sku_name            = "B1" # Standard dev/test tier
+  sku_name            = "F1" # Free tier
 }
 
 # Invoke the local Web App module
@@ -29,4 +29,8 @@ module "web_app" {
   resource_group_name      = azurerm_resource_group.example.name
   os_type                  = "Linux"
   service_plan_resource_id = azurerm_service_plan.example.id
+
+  site_config = {
+    always_on = false
+  }
 }
