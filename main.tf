@@ -73,7 +73,7 @@ resource "azurerm_linux_web_app" "this" {
     worker_count                                  = var.site_config.worker_count
 
     dynamic "application_stack" {
-      for_each = var.linux_application_stack == null ? [] : [var.linux_application_stack]
+      for_each = nonsensitive(var.linux_application_stack == null ? [] : [var.linux_application_stack])
 
       content {
         docker_image_name        = application_stack.value.docker_image_name
@@ -248,7 +248,7 @@ resource "azurerm_windows_web_app" "this" {
     worker_count                      = var.site_config.worker_count
 
     dynamic "application_stack" {
-      for_each = var.windows_application_stack == null ? [] : [var.windows_application_stack]
+      for_each = nonsensitive(var.windows_application_stack == null ? [] : [var.windows_application_stack])
 
       content {
         current_stack                = application_stack.value.current_stack
