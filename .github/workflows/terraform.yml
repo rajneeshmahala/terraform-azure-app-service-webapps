@@ -1,0 +1,65 @@
+name: "Terraform Deploy and Auto-Destroy"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+
+permissions:
+  id-token: write
+  contents: read
+  issues: write # Required for trstringer/manual-approval
+
+jobs:
+  terraform:
+    name: "Terraform Apply and Destroy"
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      TF_WORKING_DIR: "./example-deploy"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.0"
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+      # Wait for either user approval to destroy or 30 minutes timeout
+      - name: Wait for Destroy Approval or Timeout
+        uses: trstringer/manual-approval@v1
+        timeout-minutes: 30
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: ${{ github.triggering_actor }}
+          minimum-approvals: 1
+          issue-title: "Review: Destroy Terraform resources for run #${{ github.run_number }}"
+          issue-body: "Please approve this issue to trigger immediate resource destruction. If no action is taken, resources will be automatically destroyed in 30 minutes."
+
+      # Destroy resources always (runs on successful approval OR timeout/failure)
+      - name: Terraform Destroy
+        if: always()
+        run: terraform destroy -auto-approve
+        working-directory: ${{ env.TF_WORKING_DIR }}
