@@ -47,8 +47,8 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ${{ env.TF_WORKING_DIR }}
 
-      # Wait for 30 minutes. If you want to destroy the resources immediately, cancel this run.
-      - name: Wait for 30 minutes (or Cancel to Destroy)
+      # Wait for 30 minutes before auto-destruction
+      - name: Wait for 30 minutes
         run: sleep 180
 
       # Destroy resources always (runs on successful approval OR timeout/failure)

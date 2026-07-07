@@ -67,11 +67,9 @@ graph TD
     B --> C[Terraform Apply]
     C --> D[Sleep for 30 minutes]
     D -->|30-min Sleep Completes| E[Terraform Destroy]
-    D -->|User Cancels Workflow| E
 ```
 
 - **Terraform Apply**: The workflow checks out the selected branch and runs `terraform apply`.
 - **Delay Phase**: The workflow sleeps for 30 minutes.
 - **Auto-Destroy**:
-  - If the 30-minute timer completes, it automatically runs `terraform destroy`.
-  - If a user wishes to destroy resources earlier, they can simply **Cancel** the running workflow in the GitHub Actions UI. Since the destroy step is configured with `if: always()`, cancelling the workflow will abort the sleep and immediately execute the destruction of all resources.
+  - Once the 30-minute timer completes, the workflow automatically runs `terraform destroy` to tear down the infrastructure.
