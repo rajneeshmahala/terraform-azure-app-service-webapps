@@ -31,6 +31,7 @@ module "web_app" {
   service_plan_resource_id = azurerm_service_plan.example.id
 
   site_config = {
-    always_on = false
+    always_on         = false
+    use_32_bit_worker = true
   }
 }
