@@ -65,13 +65,11 @@ You must configure the following GitHub Repository Secrets for Azure Authenticat
 graph TD
     A[Trigger Workflow] --> B[Checkout Branch]
     B --> C[Terraform Apply]
-    C --> D{Wait for Approval <br> or 30 min Timeout}
-    D -->|Approved| E[Terraform Destroy]
-    D -->|30-min Timer Expires| E
+    C --> D[Sleep for 30 minutes]
+    D -->|30-min Sleep Completes| E[Terraform Destroy]
 ```
 
 - **Terraform Apply**: The workflow checks out the selected branch and runs `terraform apply`.
-- **Manual Gate**: The workflow pauses using the `trstringer/manual-approval` action and creates a GitHub issue in the repository.
+- **Delay Phase**: The workflow sleeps for 30 minutes.
 - **Auto-Destroy**:
-  - If a user comments `/approve` (or clicks approve) on the issue, the resource is immediately destroyed.
-  - If no action is taken after **30 minutes**, the approval step times out, and the workflow automatically proceeds to destroy the resources.
+  - Once the 30-minute timer completes, the workflow automatically runs `terraform destroy` to tear down the infrastructure.
