@@ -5,7 +5,7 @@ provider "azurerm" {
 # Create a resource group for the example resources
 resource "azurerm_resource_group" "example" {
   name     = "rg-webapp-example-deploy"
-  location = "East US"
+  location = "Central India"
 }
 
 # Create an App Service Plan
