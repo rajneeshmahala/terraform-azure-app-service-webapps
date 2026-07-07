@@ -47,16 +47,9 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ${{ env.TF_WORKING_DIR }}
 
-      # Wait for either user approval to destroy or 30 minutes timeout
-      - name: Wait for Destroy Approval or Timeout
-        uses: trstringer/manual-approval@v1
-        timeout-minutes: 30
-        with:
-          secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: ${{ github.triggering_actor }}
-          minimum-approvals: 1
-          issue-title: "Review: Destroy Terraform resources for run #${{ github.run_number }}"
-          issue-body: "Please approve this issue to trigger immediate resource destruction. If no action is taken, resources will be automatically destroyed in 30 minutes."
+      # Wait for 30 minutes. If you want to destroy the resources immediately, cancel this run.
+      - name: Wait for 30 minutes (or Cancel to Destroy)
+        run: sleep 180
 
       # Destroy resources always (runs on successful approval OR timeout/failure)
       - name: Terraform Destroy
