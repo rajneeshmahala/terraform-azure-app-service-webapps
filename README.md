@@ -1,15 +1,18 @@
 ## azurerm-res-web-site
 
-Terraform module for deploying an Azure Web App with optional regional VNet integration, private endpoints, private DNS zone group association, diagnostics, managed identity, app settings, connection strings, and common site configuration.
-
-### Networking
-
-This module does not create VNets, subnets, route tables, NSGs, firewalls, private DNS zones, or private DNS zone VNet links. Those are expected to be created by network modules and passed in as IDs.
-
-- `virtual_network_subnet_id` configures outbound regional VNet integration for the Web App. The subnet should be delegated to `Microsoft.Web/serverFarms`.
-- `private_endpoints` creates inbound private endpoints for the Web App. For the default `sites` subresource, use the private DNS zone `privatelink.azurewebsites.net`.
-- `private_dns_zone_resource_ids` attaches existing private DNS zones to the private endpoint through a private DNS zone group.
-- `application_security_group_associations` associates the private endpoint NIC with existing ASGs.
+### Module Features & Details
+- **App Service Deployment**: Deploys either Linux or Windows Web Apps in Azure.
+- **VNet Integration**: Configures outbound regional VNet integration (delegated subnet required).
+- **Private Endpoints**: Provisions inbound private endpoints for secure access.
+- **Private DNS Zones**: Automates DNS group associations to custom private zones.
+- **Application Security Groups**: Binds private endpoints to existing ASGs.
+- **Managed Identity**: Supports System-Assigned and User-Assigned Managed Identities.
+- **App Settings**: Dynamically configures application settings and env variables.
+- **Connection Strings**: Sets up database and system connection strings.
+- **Diagnostic Settings**: Configures diagnostics to Log Analytics, Event Hubs, or Storage Accounts.
+- **Sticky Settings**: Configures slot-sticky app settings and connection strings.
+- **Timeouts & Tags**: Supports custom operations timeouts (create, delete, update) and resource tagging.
+- **Pre-existing Infrastructure**: Expects VNets, Subnets, and DNS Zones to be created externally and passed as resource IDs.
 
 ### Example
 
